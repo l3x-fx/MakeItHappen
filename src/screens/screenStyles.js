@@ -17,13 +17,15 @@ export const screenStyles = () => {
             alignItems: 'center',
             justifyContent: 'center', 
         },
-        welcomeTxt: {
-            fontWeight: 'bold',
-            fontFamily:'Condiment_400Regular',
-            fontSize:50, 
-            color: 'white'
+        welcomeImg: {
+            height: '100%',
+            width: '100%'
         },
-        header: {
+        screen: {
+            flex:1, 
+            alignItems: 'center',
+            justifyContent: 'center', 
+            
             fontWeight: 'bold',
             fontFamily:'Condiment_400Regular',
             fontSize:50, 
