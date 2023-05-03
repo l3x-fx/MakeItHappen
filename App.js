@@ -1,16 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { useFonts, Condiment_400Regular } from '@expo-google-fonts/condiment';
+import React, { useEffect, useState } from 'react';
 import * as Font from 'expo-font';
 import Navigation from './src/navigation/Navigation.js';
 import { Welcome } from './src/screens/Welcome.js';
 import * as SplashScreen from 'expo-splash-screen';
+import { Provider } from 'react-redux';
+import store from './src/store.js';
 
-SplashScreen.preventAutoHideAsync();
+
+// SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-
-
   const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
@@ -19,11 +18,12 @@ export default function App() {
         await Font.loadAsync({
           'Condiment': require('./assets/fonts/Condiment-Regular.ttf'),
         });
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 200));
       } catch (e) {
         console.warn(e);
       } finally {
         setAppIsReady(true);
+        SplashScreen.hideAsync();
       }
     }
     prepare();
@@ -31,12 +31,15 @@ export default function App() {
 
   if (!appIsReady) {
     return  (
-      <Welcome />
+        <Welcome />
     );
   }
   if (appIsReady) {
   return   (
-    <Navigation />
+    <Provider store={store}>
+      <Navigation />
+    </Provider>
+    
   );
   }
 }

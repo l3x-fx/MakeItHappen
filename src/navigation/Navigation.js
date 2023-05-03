@@ -2,18 +2,16 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import {navStyle} from './NavigationStyle'
-
-import { Welcome } from '../screens/Welcome'
+import {light, dark, screenStyles} from '../screens/screenStyles'
 
 import { Calendar } from '../screens/Calendar'
-import { Today } from '../screens/Today'
+import { ToDo } from '../screens/ToDo'
 
 
 const Tab = createBottomTabNavigator()
 
 const Navigation = () => {
-  const style = navStyle()
+  const style = screenStyles()
 
   return (
     <NavigationContainer>
@@ -24,13 +22,13 @@ const Navigation = () => {
 
             if (route.name === 'Calendar') {
               iconName = focused ? 'calendar' : 'calendar-outline'
-            } else if (route.name === 'Today') {
-              iconName = focused ? 'add-circle' : 'add-circle-outline'
+            } else if (route.name === 'ToDo') {
+              iconName = focused ? 'list-circle' : 'list-circle-outline'
             } 
 
-            return <Ionicons name={iconName} size={size} color={color} />;
+            return <Ionicons name={iconName} size={33} color={color} />;
           },
-          tabBarActiveTintColor: '#00A1A1',
+          tabBarActiveTintColor: dark,
           tabBarInactiveTintColor: 'gray',
             
           headerShown: false
@@ -42,9 +40,9 @@ const Navigation = () => {
           options={{title: 'Calendar'}}
         />
         <Tab.Screen
-          name='Today'
-          component={Today}
-          options={{title: 'Today'}}
+          name='ToDo'
+          component={ToDo}
+          options={{title: 'ToDo'}}
         />
 
       </Tab.Navigator>
