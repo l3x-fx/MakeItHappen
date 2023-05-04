@@ -80,11 +80,13 @@ export const ToDo = () => {
                 </View>
                 : <Text style={{textDecorationLine}}>{item.text}</Text>
             }
-            <Ionicons 
+            {editId !==item.id 
+                && <Ionicons 
                 onPress={() => dispatch(removeTodo({day: selected, id:item.id}))}
                 name="close-circle-outline" 
                 size={20} 
                 style={{marginRight:0, marginLeft:'auto', textDecorationLine: 'none', paddingLeft: 10}}/>
+            }
         </TouchableOpacity>
     );
 
