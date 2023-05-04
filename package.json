@@ -28,7 +28,7 @@
     "react-native-calendar-picker": "^7.1.4",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-linear-gradient": "^2.6.2",
-    "react-native-reanimated": "^3.1.0",
+    "react-native-reanimated": "~2.14.4",
     "react-native-web": "~0.18.10",
     "react-redux": "^8.0.5"
   },

@@ -29,7 +29,6 @@ export const Calendar = () => {
 
     const onDateChange = (date) => {
         dispatch(setDate(JSON.stringify(date).substring(1, 11)))
-        console.log(JSON.stringify(selected))
         navigate('ToDo')
     }
 

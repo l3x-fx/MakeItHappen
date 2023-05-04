@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { generateID } from "../utils/generateID";
 
 const initialState = {
-    '2023-05-02': [
+    '2023-05-03': [
         {
         id: '2023-04-28-1',
         text: 'Eat cake',
@@ -61,7 +61,6 @@ export const todosSlice = createSlice({
 
 export const { addTodo, editTodo, removeTodo, setStatus } = todosSlice.actions;
 
-export const selectTodos = (store) => store.todos;
 export const getTodosByDay = day => store => store.todos[day];
 
 export default todosSlice.reducer; 

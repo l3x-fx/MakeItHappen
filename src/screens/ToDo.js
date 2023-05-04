@@ -1,48 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import  {View, Text, TextInput, ImageBackground, TouchableOpacity, FlatList } from 'react-native'
+import  {ScrollView, View, Text, TextInput, ImageBackground, TouchableOpacity, FlatList } from 'react-native'
+import {useIsFocused} from '@react-navigation/native';
 
 import { useNavigation } from '@react-navigation/native'
 import {screenStyles} from './screenStyles'
 import { getDate, getToday } from '../features/datesSlice';
-import { addTodo, editTodo, removeTodo, setStatus, selectTodos, getTodosByDay } from '../features/todosSlice';
+import { addTodo, editTodo, removeTodo, setStatus, getTodosByDay } from '../features/todosSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 export const ToDo = () => {
     const {navigate}= useNavigation()
     const dispatch = useDispatch()
+    const isFocused = useIsFocused();
+
     const styles = screenStyles()
     const selected = useSelector(getDate)
     const toDos = useSelector(getTodosByDay(selected))
     const today = useSelector(getToday)
 
     const [addActive, setAddActive] = useState(false)
-    const [text, onChangeText] = useState('')
-    
+    const [text, setText] = useState('')
+    const [editId, setEditId] = useState('')
+    const [editText, setEditText] = useState('')
 
-    const addTodoHandler = () => {
-        console.log('add')
+    const textRef = useRef('')
+    
+    const textToRef = (text) =>{
+        textRef.current = textRef.current + text
+    }
+    
+    useEffect(() => {
+        setAddActive(false)
+        setText('')
+    },[isFocused])
+
+    const handeAddTodo = () => {
+        text !=='' && dispatch(addTodo({day: selected, text:text}))
+        setAddActive(!addActive)
+        setText('')
+    }
+
+    const handleEditTodo = () => {
+        dispatch(editTodo({day: selected, id:editId, text: editText}))
+        setEditId('')
+        setEditText('')
+    }
+    const handleEditCancel = () => {
+        setEditId('')
+        setEditText('')
     }
 
     const Item = ({item, backgroundColor, textDecorationLine}) => (
         <TouchableOpacity 
-            style={[styles.listitem, {backgroundColor}]}
-            onLongPress={()=> dispatch(editTodo({day: selected, id:item.id, text:'take a bath'}))}
-            onPress={() => dispatch(setStatus({day:selected, id:item.id}))}
+            style={[styles.listitem, {backgroundColor}, editId === item.id && { backgroundColor: '#fff' }]}
+            onLongPress={() => setEditId(item.id)}
+            onPress={() => editId==='' && dispatch(setStatus({day:selected, id:item.id}))}
             activeOpacity={0.6}>
-            <Text style={{textDecorationLine}}>{item.text}</Text>
+            {editId ===item.id 
+                ? <View style={styles.inputcontainer}>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setEditText}
+                    value={editText}
+                    autoFocus={true}
+                />
+                <Ionicons 
+                    onPress={handleEditTodo}
+                    name= 'checkmark-outline'
+                    size={33} 
+                    style={{marginRight:0, marginLeft:'auto'}}/>
+                <Ionicons 
+                    onPress={handleEditCancel}
+                    name= 'close-outline'
+                    size={33} 
+                    style={{marginRight:0, marginLeft:'auto'}}/>
+                </View>
+                : <Text style={{textDecorationLine}}>{item.text}</Text>
+            }
             <Ionicons 
                 onPress={() => dispatch(removeTodo({day: selected, id:item.id}))}
                 name="close-circle-outline" 
                 size={20} 
-                style={{marginRight:0, marginLeft:'auto', textDecorationLine: 'none'}}/>
+                style={{marginRight:0, marginLeft:'auto', textDecorationLine: 'none', paddingLeft: 10}}/>
         </TouchableOpacity>
     );
 
     const renderItem = ({item}) => {
-        const backgroundColor = item.done === false ? '#c5c5c5' : '#e5e5e5';
+        const backgroundColor = item.done === true ? '#e5e5e5' : '#0caabe30';
         const textDecorationLine = item.done === false ? 'none' : 'line-through';
-
         return (
             <Item
                 item={item}
@@ -52,6 +98,8 @@ export const ToDo = () => {
         );
     };
 
+
+    
 
     return (
         <View style={styles.screen}>
@@ -63,54 +111,52 @@ export const ToDo = () => {
             </View>            
                 <Text style={styles.title}>ToDo</Text>
                 <Text>{selected === today ? 'Today' : selected}</Text>
+
             <View style={styles.contentbox}>
                 <FlatList
+                    ListHeaderComponent={
+                        <>
+                            <Text style={styles.title}>ToDo</Text>
+                            <Text>{selected === today ? 'Today' : selected}</Text>
+                    </>}
                     data={toDos}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
+
+                    ListFooterComponent={
+                        < >
+                        </>
+                    }
                 />
-            </View>
-            {addActive && (
-                <View>
+
+            {addActive 
+                ? <View style={styles.inputcontainer}>
                     <TextInput
                         style={styles.input}
-                        onChangeText={onChangeText}
+                        onChangeText={text => setText(text)}
                         placeholder='Add New Fun Thing To Do'
                         value={text}
                     />
-                </View>
-            )}
-            {addActive 
-                ? <View style={styles.contentbox}>
                     <Ionicons 
-                        // onPress={() => dispatch(addTodo({day: selected, text:'eat cake'}))}
-                        onPress={() => setAddActive(!addActive)}
+                        onPress={handeAddTodo}
                         name= 'checkmark-outline'
-                        size={40} 
+                        size={33} 
                         style={{marginRight:0, marginLeft:'auto'}}/>
-
-                        {/* // checkmark-outline / close-outline */}
                     <Ionicons 
-                        // onPress={() => dispatch(addTodo({day: selected, text:'eat cake'}))}
                         onPress={() => setAddActive(!addActive)}
                         name= 'close-outline'
-                        size={40} 
+                        size={33} 
                         style={{marginRight:0, marginLeft:'auto'}}/>
-
-                        {/* // checkmark-outline / close-outline */}
                 </View>
-                : 
-                <View style={styles.contentbox}>
-                <Ionicons 
-                    // onPress={() => dispatch(addTodo({day: selected, text:'eat cake'}))}
-                    onPress={() => setAddActive(!addActive)}
-                    name= {addActive ? 'remove-circle-outline': 'add-circle-outline' }
-                    size={40} 
-                    style={{marginRight:0, marginLeft:'auto'}}/>
-
-                    {/* // checkmark-outline / close-outline */}
+                : <View style={styles.listitem}>
+                    <Ionicons 
+                        onPress={() => setAddActive(!addActive)}
+                        name= {'add-circle-outline'}
+                        size={33} 
+                        style={{margin:'auto'}}/>
                 </View>
-            }
+            } 
+            </View> 
         </View>
     )
     

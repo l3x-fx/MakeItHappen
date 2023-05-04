@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "MakeItHappen",
-    "slug": "MakeItHappen",
+    "slug": "make-it-happen",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "658cfc66-d54d-4390-be9e-660765884e09"
+      }
+    },
+    "owner": "l3x-fx"
   }
 }

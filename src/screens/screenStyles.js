@@ -35,7 +35,7 @@ export const screenStyles = () => {
         },
         bannercontainer:{
             width:'100%',
-            height:'18%',
+            height:'12%',
 
         },
         banner: {
@@ -53,23 +53,31 @@ export const screenStyles = () => {
         },
         container: {
             flex: 1,
-            // marginTop: StatusBar.currentHeight || 0,
         },
         listitem: {
             padding: 8,
             marginVertical: 5,
             marginHorizontal: 5,
-            width: '80vw',
+            width: '80%',
             flexDirection: 'row', 
+            textAlign: 'left'
+        },
+        inputcontainer:{
+            flexDirection: 'row', 
+            alignItems: 'center', 
+            width: '80%',
+            margin: 'auto', 
+            marginTop: 10
         },
         input: {
             height: 40,
-            margin: 12,
+            width: '100%',
+            marginRight: 12,
             borderWidth: 1,
             borderColor: '#000',
             padding: 10,
-            placeholderTextColor: '#c5c5c5'
-          },
+            // placeholderTextColor: '#c5c5c5'
+        },
         });
     }
     
