@@ -8,6 +8,7 @@ import {screenStyles} from './screenStyles'
 import { getDate, getToday } from '../features/datesSlice';
 import { addTodo, editTodo, removeTodo, setStatus, getTodosByDay } from '../features/todosSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { Spacer } from '../components/Spacer';
 
 export const ToDo = () => {
     const {navigate}= useNavigation()
@@ -33,6 +34,7 @@ export const ToDo = () => {
     useEffect(() => {
         setAddActive(false)
         setText('')
+
     },[isFocused])
 
     const handeAddTodo = () => {
@@ -97,40 +99,10 @@ export const ToDo = () => {
             />
         );
     };
-
-
-    
-
-    return (
-        <View style={styles.screen}>
-            <View style={styles.bannercontainer}>
-                <ImageBackground 
-                    source={require('../../assets/banner.png')}
-                    style={styles.banner}
-                    resizeMode='cover' />
-            </View>            
-                <Text style={styles.title}>ToDo</Text>
-                <Text>{selected === today ? 'Today' : selected}</Text>
-
-            <View style={styles.contentbox}>
-                <FlatList
-                    ListHeaderComponent={
-                        <>
-                            <Text style={styles.title}>ToDo</Text>
-                            <Text>{selected === today ? 'Today' : selected}</Text>
-                    </>}
-                    data={toDos}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id}
-
-                    ListFooterComponent={
-                        < >
-                        </>
-                    }
-                />
-
-            {addActive 
-                ? <View style={styles.inputcontainer}>
+    const Add = () => {
+        {if (addActive){
+            return(
+                <View style={styles.inputcontainer}>
                     <TextInput
                         style={styles.input}
                         onChangeText={text => setText(text)}
@@ -141,22 +113,51 @@ export const ToDo = () => {
                         onPress={handeAddTodo}
                         name= 'checkmark-outline'
                         size={33} 
-                        style={{marginRight:0, marginLeft:'auto'}}/>
+                        style={{marginRight:0}}/>
                     <Ionicons 
                         onPress={() => setAddActive(!addActive)}
                         name= 'close-outline'
                         size={33} 
-                        style={{marginRight:0, marginLeft:'auto'}}/>
+                        style={{marginRight:0}}/>
                 </View>
-                : <View style={styles.listitem}>
+            )
+        } else {
+            return(
+                <View style={styles.listitem}>
                     <Ionicons 
                         onPress={() => setAddActive(!addActive)}
                         name= {'add-circle-outline'}
                         size={33} 
                         style={{margin:'auto'}}/>
                 </View>
-            } 
+            )}
+        } 
+    }
+    return (
+        <View style={styles.screen}>
+            <Spacer  />
+            <View style={styles.bannercontainer}>
+                <ImageBackground 
+                    source={require('../../assets/banner.png')}
+                    style={styles.banner}
+                    resizeMode='cover' />
+            </View>
+
+            <Text style={styles.title}>ToDo</Text>
+            <Text>{selected === today ? 'Today' : selected}</Text>
+
+            <View style={styles.contentbox}>
+                <FlatList
+                styles={{alignSelf: 'center'}}
+                    ListHeaderComponent={<></>}
+                    data={toDos}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
+                    ListFooterComponent={<Add />}
+                />
+
             </View> 
+
         </View>
     )
     

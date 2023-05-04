@@ -1,11 +1,13 @@
 import moment from 'moment';
 import React, {useState, useEffect} from 'react'
 import { useSelector, useDispatch } from "react-redux";
-import  {View, ImageBackground, Text, TouchableOpacity} from 'react-native'
+import  {SafeAreaView, View, ImageBackground, Text, TouchableOpacity} from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import CalendarPicker from 'react-native-calendar-picker';
 import {light, dark, screenStyles} from './screenStyles'
 import { getDate, setDate, setToday, getToday } from '../features/datesSlice';
+import { Spacer } from '../components/Spacer';
+
 
 
 
@@ -34,6 +36,7 @@ export const Calendar = () => {
 
     return (
         <View style={styles.screen}>
+            <Spacer />
             <View style={styles.bannercontainer}>
                 <ImageBackground 
                     source={require('../../assets/banner.png')}
@@ -46,12 +49,12 @@ export const Calendar = () => {
                     allowRangeSelection={false}
                     weekdays={weekdays}
                     months={months}
-                    monthTitleStyle={styles.title}
-                    yearTitleStyle={styles.title}
-                    previousTitleStyle={styles.title}
-                    nextTitleStyle={styles.title}                    
-                    previousTitle='🡄'
-                    nextTitle='🡆'
+                    monthTitleStyle={styles.calendartitle}
+                    yearTitleStyle={styles.calendartitle}
+                    previousTitleStyle={styles.calendartitle}
+                    nextTitleStyle={styles.calendartitle}                    
+                    previousTitle='<'
+                    nextTitle='>'
                     todayBackgroundColor={light}
                     selectedDayColor={dark}
                     selectedDayTextColor="#FFFFFF"
@@ -59,7 +62,6 @@ export const Calendar = () => {
                 />
             </View>
         </View>
-
     )
 }
 

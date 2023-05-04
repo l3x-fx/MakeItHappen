@@ -30,7 +30,6 @@ export const todosSlice = createSlice({
             } else {
                 do {
                     newId = generateID(day)
-                    console.log(newId)
                 } while(state[day].includes(obj => obj.id !== newId))
                 state[day].push({id: newId, text: text, done:false})
             }
@@ -39,7 +38,6 @@ export const todosSlice = createSlice({
         }, 
         editTodo:(state,action) => {
             const { day, id, text } = action.payload
-            console.log(text)
             const newText = state[day].find(todo => todo.id === id)
             newText.text = text
         },

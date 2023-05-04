@@ -34,8 +34,9 @@ export const screenStyles = () => {
             backgroundColor: 'white'
         },
         bannercontainer:{
+
             width:'100%',
-            height:'12%',
+            height: 100
 
         },
         banner: {
@@ -45,36 +46,54 @@ export const screenStyles = () => {
         title: {
             fontFamily: 'Condiment',
             fontSize:24, 
-            textAlign: 'center'
+            textAlign: 'center', 
+            width: '100%',
+            paddingTop: '5%',
+        }, 
+        calendartitle: {
+            fontFamily: 'Condiment',
+            fontSize:24, 
+            textAlign: 'left', 
+            width: '100%',
+            paddingHorizontal: 8
         }, 
         contentbox: {
-            paddingTop: '5%'
-            
+            paddingTop: '5%',
+            alignItems: 'center',
+            width:'85%',
+            // borderColor: 'red',
+            // borderWidth: 3
         },
         container: {
             flex: 1,
         },
+        list: {
+            alignItems:'center',
+            
+        },
         listitem: {
             padding: 8,
             marginVertical: 5,
-            marginHorizontal: 5,
-            width: '80%',
+            width: '100%',
             flexDirection: 'row', 
-            textAlign: 'left'
+            textAlign: 'left',
+            justifyContent: 'center',
+
+
         },
         inputcontainer:{
             flexDirection: 'row', 
             alignItems: 'center', 
-            width: '80%',
-            margin: 'auto', 
-            marginTop: 10
+            justifyContent: 'center',
+            // width: '80%',
+            marginTop: 10,
+
         },
         input: {
             height: 40,
-            width: '100%',
+            width: '75%',
             marginRight: 12,
             borderWidth: 1,
-            borderColor: '#000',
             padding: 10,
             // placeholderTextColor: '#c5c5c5'
         },
