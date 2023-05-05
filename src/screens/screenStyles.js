@@ -1,13 +1,9 @@
 import { StyleSheet } from "react-native";
-import { useFonts, Condiment_400Regular } from '@expo-google-fonts/condiment';
 
 export const light = '#03c2cc'
 export const dark = '#092479'
 
 export const screenStyles = () => {
-    let [fontsLoaded] = useFonts({
-        Condiment_400Regular,
-    });
 
     return StyleSheet.create({
         welcome: {
@@ -61,8 +57,6 @@ export const screenStyles = () => {
             paddingTop: '5%',
             alignItems: 'center',
             width:'85%',
-            // borderColor: 'red',
-            // borderWidth: 3
         },
         container: {
             flex: 1,
@@ -85,7 +79,6 @@ export const screenStyles = () => {
             flexDirection: 'row', 
             alignItems: 'center', 
             justifyContent: 'center',
-            // width: '80%',
             marginTop: 10,
 
         },
@@ -95,7 +88,7 @@ export const screenStyles = () => {
             marginRight: 12,
             borderWidth: 1,
             padding: 10,
-            // placeholderTextColor: '#c5c5c5'
+
         },
         });
     }
