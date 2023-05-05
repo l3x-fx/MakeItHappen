@@ -9,14 +9,12 @@ export const screenStyles = () => {
         Condiment_400Regular,
     });
 
-   
-
     return StyleSheet.create({
         welcome: {
             flex:1, 
             alignItems: 'center',
             justifyContent: 'center', 
-            height: '100%',
+            height: '80%',
             width:'100%'
         },
         welcomeImg: {
@@ -24,8 +22,10 @@ export const screenStyles = () => {
             width: '100%'
         },
         screen: {
-            flex:1, 
+            //flex:1, 
             alignItems: 'center',
+            width:'100%',
+            height: '100%',
             justifyContent: 'flex-start', 
             textAlign: 'center',
             fontWeight: 'bold',
