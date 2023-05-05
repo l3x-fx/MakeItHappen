@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import  {View, Text, ImageBackground, TouchableOpacity, FlatList} from 'react-native'
-import {useIsFocused} from '@react-navigation/native';
+import  { View, Text, ImageBackground, TouchableOpacity, FlatList } from 'react-native'
+import { useIsFocused} from '@react-navigation/native';
 
 import {screenStyles} from './screenStyles'
 import { getDate, getToday } from '../features/datesSlice';
-import { addTodo, editTodo, removeTodo, setStatus, getTodosByDay } from '../features/todosSlice';
+import { removeTodo, setStatus, getTodosByDay } from '../features/todosSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Spacer } from '../components/Spacer';
 import { SubmitText } from '../components/SubmitText'
@@ -44,8 +44,7 @@ export const ToDo = () => {
     const Add = () => {
         {if (addActive){
             return(
-                //ADD
-                 <SubmitText
+                <SubmitText
                     isEdit={false}
                     resetAdd={resetAdd}
                     resetEdit={resetEdit}
@@ -64,7 +63,6 @@ export const ToDo = () => {
         }
     }
 
-
     const Item = ({item, backgroundColor, textDecorationLine}) => (
         <TouchableOpacity
             style={[styles.listitem, {backgroundColor}, editId === item.id && { backgroundColor: '#fff' }]}
@@ -72,8 +70,7 @@ export const ToDo = () => {
             onPress={() => editId==='' && dispatch(setStatus({day:selected, id:item.id}))}
             activeOpacity={0.6}>
             {editId ===item.id
-                //EDIT
-                 ?  <SubmitText
+                ?  <SubmitText
                     isEdit={true}
                     editId={editId}
                     initialValue={item.text}
@@ -113,7 +110,6 @@ export const ToDo = () => {
                 ListFooterComponent={<Add />}
                 removeClippedSubviews={false}
             />
-
         </View>
     )
 }

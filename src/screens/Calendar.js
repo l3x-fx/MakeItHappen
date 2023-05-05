@@ -1,21 +1,17 @@
 import moment from 'moment';
-import React, {useState, useEffect} from 'react'
+import React, { useEffect} from 'react'
 import { useSelector, useDispatch } from "react-redux";
-import  {SafeAreaView, View, ImageBackground, Text, TouchableOpacity} from 'react-native'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import  { View, ImageBackground } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import CalendarPicker from 'react-native-calendar-picker';
-import {light, dark, screenStyles} from './screenStyles'
-import { getDate, setDate, setToday, getToday } from '../features/datesSlice';
+import { light, dark, screenStyles } from './screenStyles'
+import { setDate, setToday, getToday } from '../features/datesSlice';
 import { Spacer } from '../components/Spacer';
-
-
-
 
 export const Calendar = () => {
     const {navigate}= useNavigation()
     const styles = screenStyles()
     const dispatch = useDispatch()
-    const selected = useSelector(getDate)
     const today = useSelector(getToday)
 
     const weekdays = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']

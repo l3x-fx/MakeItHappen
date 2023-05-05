@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { generateID } from "../utils/generateID";
 
 const initialState = {
-    '2023-05-03': [
+    '2023-05-05': [
         {
         id: '2023-04-28-1',
         text: 'Eat cake',
