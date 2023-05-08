@@ -5,7 +5,7 @@ import { useIsFocused} from '@react-navigation/native';
 
 import {screenStyles} from './screenStyles'
 import { getDate, getToday } from '../features/datesSlice';
-import { removeTodo, setStatus, getTodosByDay } from '../features/todosSlice';
+import { removeTodoAsync, setStatusAsync, getAllTodosAsync, getTodos } from '../features/todosSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Spacer } from '../components/Spacer';
 import { SubmitText } from '../components/SubmitText'
@@ -13,22 +13,24 @@ import { SubmitText } from '../components/SubmitText'
 export const ToDo = () => {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
+    
+    useEffect(() => {
+        dispatch(getAllTodosAsync())
+        resetAdd()
+        resetEdit()
+    },[isFocused])
 
     const styles = screenStyles()
     const selected = useSelector(getDate)
-    const toDos = useSelector(getTodosByDay(selected))
+    const toDos = useSelector(getTodos(selected))
+    console.log('TODOS/DAY ' + JSON.stringify(toDos))
     const today = useSelector(getToday)
-
+    
     const [addActive, setAddActive] = useState(false)
     const [editId, setEditId] = useState('')
 
     const resetAdd = () => setAddActive(false)
     const resetEdit = () => setEditId('')
-
-    useEffect(() => {
-        resetAdd()
-        resetEdit()
-    },[isFocused])
 
     const renderItem = ({item}) => {
         const backgroundColor = item.done === true ? '#e5e5e5' : '#0caabe30';
@@ -67,7 +69,7 @@ export const ToDo = () => {
         <TouchableOpacity
             style={[styles.listitem, {backgroundColor}, editId === item.id && { backgroundColor: '#fff' }]}
             onLongPress={() => setEditId(item.id)}
-            onPress={() => editId==='' && dispatch(setStatus({day:selected, id:item.id}))}
+            onPress={() => editId==='' && dispatch(setStatusAsync({day:selected, id:item.id}))}
             activeOpacity={0.6}>
             {editId ===item.id
                 ?  <SubmitText
@@ -81,7 +83,7 @@ export const ToDo = () => {
             }
             {editId !==item.id
                 && <Ionicons
-                onPress={() => dispatch(removeTodo({day: selected, id:item.id}))}
+                onPress={() => dispatch(removeTodoAsync({day: selected, id:item.id}))}
                 name="close-circle-outline"
                 size={20}
                 style={{marginRight:0, marginLeft:'auto', textDecorationLine: 'none', paddingLeft: 10}}/>

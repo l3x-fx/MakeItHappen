@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import  {View, TextInput } from 'react-native'
-
-
 import {screenStyles} from '../screens/screenStyles'
 import { getDate } from '../features/datesSlice';
-import { addTodo, editTodo } from '../features/todosSlice';
+import { addTodoAsync, editTodoAsync } from '../features/todosSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+
+
 
 export const SubmitText = ({ resetAdd, resetEdit, initialValue, isEdit, editId}) => {
     const styles = screenStyles()
     const dispatch = useDispatch()
     const selected = useSelector(getDate)
     const [text, setText] = useState('')
-    const [editText, setEditText] = useState('')
-
+    const [editText, setEditText] = useState(initialValue)
+    console.log(selected + '....this is your day')
+    
     const handleEditSubmit = () => {
-        dispatch(editTodo({day: selected, id:editId, text: editText}))
+        dispatch(editTodoAsync({day: selected, id:editId, text: editText}))
         resetEdit()
         setEditText('')
     }
@@ -28,14 +29,13 @@ export const SubmitText = ({ resetAdd, resetEdit, initialValue, isEdit, editId})
     }
     
     const handleAddTodo = () => {
-        text !=='' && dispatch(addTodo({day: selected, text:text}))
+        text !=='' && dispatch(addTodoAsync({day: selected, text:text}))
         resetAdd()
         setText('')
     }
 
     useEffect(()=> {
         if(isEdit) {
-            setEditText(initialValue)
             resetAdd()
         } else {
             resetEdit()
