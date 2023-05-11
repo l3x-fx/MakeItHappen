@@ -5,7 +5,7 @@ import { useIsFocused} from '@react-navigation/native';
 
 import {screenStyles} from './screenStyles'
 import { getDate, getToday } from '../features/datesSlice';
-import { removeTodoAsync, setStatusAsync, getAllTodosAsync, getTodos } from '../features/todosSlice';
+import { removeTodoAsync, setStatusAsync, getTodos } from '../features/todosSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Spacer } from '../components/Spacer';
 import { SubmitText } from '../components/SubmitText'
@@ -14,24 +14,24 @@ export const ToDo = () => {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     
-    useEffect(() => {
-        dispatch(getAllTodosAsync())
-        resetAdd()
-        resetEdit()
-    },[isFocused])
+
 
     const styles = screenStyles()
     const selected = useSelector(getDate)
+
     const toDos = useSelector(getTodos(selected))
-    console.log('TODOS/DAY ' + JSON.stringify(toDos))
     const today = useSelector(getToday)
-    
     const [addActive, setAddActive] = useState(false)
     const [editId, setEditId] = useState('')
 
     const resetAdd = () => setAddActive(false)
     const resetEdit = () => setEditId('')
-
+    
+    useEffect(() => {
+        resetAdd()
+        resetEdit()
+    },[isFocused])
+    
     const renderItem = ({item}) => {
         const backgroundColor = item.done === true ? '#e5e5e5' : '#0caabe30';
         const textDecorationLine = item.done === false ? 'none' : 'line-through';
@@ -44,7 +44,7 @@ export const ToDo = () => {
         );
     };
     const Add = () => {
-        {if (addActive){
+        {if (addActive && editId === ''){
             return(
                 <SubmitText
                     isEdit={false}
@@ -68,10 +68,10 @@ export const ToDo = () => {
     const Item = ({item, backgroundColor, textDecorationLine}) => (
         <TouchableOpacity
             style={[styles.listitem, {backgroundColor}, editId === item.id && { backgroundColor: '#fff' }]}
-            onLongPress={() => setEditId(item.id)}
+            onLongPress={() => !addActive && setEditId(item.id)}
             onPress={() => editId==='' && dispatch(setStatusAsync({day:selected, id:item.id}))}
             activeOpacity={0.6}>
-            {editId ===item.id
+            {editId ===item.id 
                 ?  <SubmitText
                     isEdit={true}
                     editId={editId}
@@ -107,6 +107,7 @@ export const ToDo = () => {
                 style={{alignSelf: 'center'}}
                 ListHeaderComponent={<></>}
                 data={toDos}
+                ListEmptyComponent={<></>}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
                 ListFooterComponent={<Add />}

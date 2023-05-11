@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 import CalendarPicker from 'react-native-calendar-picker';
 import { light, dark, screenStyles } from './screenStyles'
 import { setDate, setToday, getToday } from '../features/datesSlice';
+import { getAllTodosAsync } from '../features/todosSlice'
 import { Spacer } from '../components/Spacer';
 
 export const Calendar = () => {
@@ -23,6 +24,7 @@ export const Calendar = () => {
             dispatch(setToday(newToday))
             dispatch(setDate(newToday))
         }
+        dispatch(getAllTodosAsync())
     }, [])
 
     const onDateChange = (date) => {

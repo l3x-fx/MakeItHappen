@@ -24,7 +24,6 @@ export const getAllTodosAsync = createAsyncThunk(
     'todos/getAllTodosAsync',
     async() => {
         const response = await AsyncStorage.getItem('todos')
-        //console.log('getAllTodosAsync' + response)
         const parsedResponse = JSON.parse(response)
         return parsedResponse
     }
@@ -32,77 +31,121 @@ export const getAllTodosAsync = createAsyncThunk(
 
 export const addTodoAsync = createAsyncThunk(
     'todos/addTodoAsync',
-    async({ day, text})=> {
+    async ({ day, text }, { getState }) => {
+        let { todos } = getState()
+        let newId = generateID(day, todos.value[day])
         let newTodoValue = {}
+
+        let workingTodos = todos.value.hasOwnProperty(day) 
+            ? {
+                ... todos, 
+                value: {
+                    ...todos.value, 
+                    [day]: [...todos.value[day], {id:newId, text, done:false}]
+            }}
+            :{
+                ...todos, 
+                value: {
+                    ...todos.value, 
+                    [day]: [{id:newId, text, done:false}]
+                }
+            }
         try{
-            await AsyncStorage.getItem('todos')
-                .then(async response => {
-                    const workingTodos = response ? JSON.parse(response) : {};
-                    let newId = generateID(day)
-                    if (workingTodos.hasOwnProperty(day)){
-                        let idExists = workingTodos[day].some(todo => todo.id === newId);
-                        while(idExists){
-                            newId = generateID(day);
-                            idExists = workingTodos[day].some(todo => todo.id === newId);
-                        }
-                    } 
-                    else {
-                        workingTodos[day] = [];
-                    }
-                    workingTodos[day].push({id:newId, text, done:false})
-                    await AsyncStorage.setItem('todos', JSON.stringify(workingTodos));
-                })
+            await AsyncStorage.setItem('todos', JSON.stringify(workingTodos))                
                 .then(async () => {
                     const response = await AsyncStorage.getItem('todos')
-                    console.log('NEW WORKING TODOS - DAY: ' + response)
                     newTodoValue = JSON.parse(response)
                 })
         } catch(e) {
             console.log(e)
         }
-        return newTodoValue
+        return newTodoValue.value
     })
-
-
 
 export const editTodoAsync = createAsyncThunk(
     'todos/editTodoAsync',
     async( {day, id, text} , {getState})=> {
         const {todos} = getState()
+        let editedTodos = {}
 
-        todos[day].find(todo => todo.id === id).text = text
+        let workingTodos = {
+                ... todos, 
+                value: {
+                    ...todos.value, 
+                    [day]: todos.value[day].map(todo => {
+                        if (todo.id === id) {return {...todo, text:text}}
+                        return todo
+                    })
+            }}
 
-        await AsyncStorage.setItem('todos', JSON.stringify(todos));
-        return todos;
+        try{
+            await AsyncStorage.setItem('todos', JSON.stringify(workingTodos))                
+                .then(async () => {
+                    const response = await AsyncStorage.getItem('todos')
+                    editedTodos = JSON.parse(response)
+                })
+        } catch(e) {
+            console.log(e)
+        }
+        return editedTodos.value
     })
+    
 
 export const removeTodoAsync = createAsyncThunk(
     'todos/removeTodoAsync',
     async({ day, id }, {getState})=> {
-        const {todos} = getState()
-        console.log(JSON.stringify(todos))
-        todos[day] = todos[day].filter(todo => todo.id !== id)
+        let { todos } = getState()
+        let removedTodo = {}
 
-        if (todos[day].length === 0){
-            delete todos[day];
+        console.log(JSON.stringify(todos))
+        
+        let workingTodos = {
+            ... todos, 
+            value: {
+                [day]: todos.value[day].filter (todo => todo.id !== id)
+            }
         }
 
-        await AsyncStorage.setItem('todos', JSON.stringify(todos));
-        return todos;
+        try{
+            await AsyncStorage.setItem('todos', JSON.stringify(workingTodos))                
+                .then(async () => {
+                    const response = await AsyncStorage.getItem('todos')
+                    console.log('NEW WORKING TODOS: ' + response)
+                    removedTodo = JSON.parse(response)
+                })
+        } catch(e) {
+            console.log(e)
+        }
+        return removedTodo.value
     })
 
 export const setStatusAsync = createAsyncThunk(
     'todos/setStatusAsync',
     async({ day, id }, {getState})=> {
         const {todos} = getState()
-        console.log('setstatus day: ' + day)
-        console.log('setstatus id: ' + id)
-
-        const thisTodo = todos[day].find(todo => todo.id === id)
-        thisTodo.done = !thisTodo.done
-
-        await AsyncStorage.setItem('todos', JSON.stringify(todos));
-        return todos;
+        let changedTodos = {}
+        let workingTodos = {
+                ... todos, 
+                value: {
+                    ...todos.value, 
+                    [day]: todos.value[day].map(todo => {
+                        if (todo.id === id) {
+                            return {...todo, done:!todo.done}
+                        }
+                        return todo
+                    })
+            }}
+        console.log(JSON.stringify(workingTodos))
+        try{
+            await AsyncStorage.setItem('todos', JSON.stringify(workingTodos))                
+                .then(async () => {
+                    const response = await AsyncStorage.getItem('todos')
+                    changedTodos = JSON.parse(response)
+                })
+        } catch(e) {
+            console.log(e)
+        }
+        return changedTodos.value
     })
 
 export const todosSlice = createSlice({
@@ -149,27 +192,29 @@ export const todosSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getAllTodosAsync.fulfilled, (state,action) => {
-                //console.log('PAYLOAD' + JSON.stringify(action.payload))
-                //console.log('STATE' + JSON.stringify(state))
-                state.value = action.payload;
-                //console.log('NEW STATE' + JSON.stringify(state.value) )
+                if(action.payload !== null) {state.value = action.payload.value;}
             })
             .addCase(addTodoAsync.fulfilled, (state, action) => {
                 state.value = action.payload;
             })
             .addCase(editTodoAsync.fulfilled, (state, action) => {
-                state = action.payload;
+                state.value = action.payload;
             })
             .addCase(removeTodoAsync.fulfilled, (state, action) => {
-                state = action.payload;
+                state.value = action.payload;
             })
             .addCase(setStatusAsync.fulfilled, (state, action) => {
-                state = action.payload;
+                state.value = action.payload;
             })
     }
 });
 
-export const getTodos = day => store => store.todos.value === null ? [] : store.todos.value[day]
+export const getTodos = day => store => {
+    return day in store.todos.value ? store.todos.value[day] : []
+}
+
+    
+
 
 export default todosSlice.reducer;
 
