@@ -79,7 +79,7 @@ export const ToDo = () => {
                     resetAdd={resetAdd}
                     resetEdit={resetEdit}
                 />
-                : <Text style={{textDecorationLine}}>{item.text}</Text>
+                : <Text style={{textDecorationLine, width:'90%'}}>{item.text}</Text>
             }
             {editId !==item.id
                 && <Ionicons
